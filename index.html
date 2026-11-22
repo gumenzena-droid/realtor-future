@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Риелтор нового времени — Авторская программа обучения</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #f6f7fa;
+      --bg-secondary: #eceff5;
+      --text-primary: #0a0b0e;
+      --text-muted: rgba(10, 11, 14, 0.62);
+      --accent: #0a0b0e;
+      --ice-blue: #38bdf8;
+      --glass-bg: rgba(255, 255, 255, 0.78);
+      --glass-border: rgba(10, 11, 14, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Ultra-condensed brutalist display font matching Noomo Labs reference */
+    .font-display-condensed {
+      font-family: 'Anton', Impact, sans-serif;
+      letter-spacing: -0.015em;
+      text-transform: uppercase;
+    }
+
+    .font-mono-code {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* Subtle micro-dot studio canvas pattern like Noomo Labs */
+    .studio-dots {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-color: #f6f7fa;
+      background-image:
+        radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.96) 0%, rgba(235, 239, 247, 0.72) 55%, rgba(224, 230, 240, 0.85) 100%),
+        radial-gradient(rgba(10, 11, 14, 0.12) 1px, transparent 1px);
+      background-size: 100% 100%, 14px 14px;
+    }
+
+    /* WebGL Canvas sits above background typography so glass tiles refract the giant text behind */
+    #diamond-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Clean light glass cards for content sections */
+    .glass-panel {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: #0a0b0e;
+      box-shadow: 0 22px 48px -18px rgba(10, 11, 14, 0.16);
+    }
+
+    /* Solid high-contrast brutalist CTA */
+    .btn-dark {
+      background: #0a0b0e;
+      color: #ffffff;
+      font-weight: 500;
+      transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-dark:hover {
+      background: #1e222d;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -8px rgba(10, 11, 14, 0.35);
+    }
+
+    /* Hold progress bar like bottom of Noomo Labs */
+    .hold-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(10, 11, 14, 0.55);
+      background: rgba(255, 255, 255, 0.65);
+      overflow: hidden;
+      padding: 1px;
+    }
+
+    .hold-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: #0a0b0e;
+      transition: width 0.06s linear;
+    }
+
+    header, main, footer {
+      position: relative;
+      z-index: 10;
+    }
+  .contact-links{display:flex;flex-wrap:wrap;gap:.65rem}.contact-links a{padding:.7rem 1rem;border:1px solid #1114;border-radius:100px}.contact-links a:first-child{background:#101116;color:white}.faq details{border-bottom:1px solid #1113;padding:1rem 0}.faq summary{cursor:pointer;font-weight:650}.faq details p{margin-top:.65rem}.glass-panel article p+p{margin-top:.65rem}
+    #philosophy {background:radial-gradient(ellipse at 12% 29%,#c6dcec 0%,transparent 51%),radial-gradient(ellipse at 90% 80%,#dcd4eb 0%,transparent 66%),linear-gradient(132deg,#f8fafc,#edf1f8)}
+    .team-glass {background:linear-gradient(146deg,#fff9,#fff1 52%,#f8f5ff69);border:1px solid #fff;backdrop-filter:blur(5px);box-shadow:inset 0 1px 1px #fff,inset 0 -2px 3px #9cafd75c,0 12px 28px #273b5f16;transition:background .3s ease,box-shadow .3s ease}
+    .team-glass:hover {background:linear-gradient(146deg,#fff9,#dceeff45 48%,#eee1f77d);box-shadow:inset 0 1px 2px #fff,inset 0 -2px 4px #a8a3d56b,0 13px 28px #273b5f23}
+    .team-glass p+p {margin-top:.65rem}
+</style>
+<link rel="stylesheet" href="reviews.css"><script defer src="reviews.js"></script></head>
+<body>
+
+  <!-- Light Studio Dotted Backdrop -->
+  <div class="studio-dots"></div>
+
+  <!-- 3D WebGL Layer (Transparent Refracting Glass Sphere + Photorealistic Ice-White Diamond) -->
+  <canvas id="diamond-canvas"></canvas>
+
+  <!-- Minimalist Top Navigation matching [WORK] [AGENCY] [CONTACT] style -->
+  <header class="fixed top-0 left-0 right-0 z-40 px-5 sm:px-10 py-5">
+    <div class="max-w-[1440px] mx-auto flex items-center justify-between">
+      <a href="https://t.me/evolution_estate_club" class="flex items-baseline gap-1.5 group" aria-label="Эволюция риэлтора в Telegram">
+        <span class="font-display-condensed text-2xl sm:text-3xl tracking-tight text-[#0a0b0e]">Эволюция</span>
+        <span class="font-serif italic text-lg sm:text-xl text-[#0a0b0e]/75">риэлтора</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-7 font-mono-code text-xs tracking-wider uppercase text-[#0a0b0e]">
+        <a href="#philosophy" class="hover:opacity-55 transition-opacity">Возможности</a>
+        <a href="#program" class="hover:opacity-55 transition-opacity">Программа</a>
+        <a href="#expert" class="hover:opacity-55 transition-opacity">Об авторе</a>
+        <a href="#reviews" class="hover:opacity-55 transition-opacity">Отзывы</a>
+        <a href="#formats" class="hover:opacity-55 transition-opacity">Условия</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="openModal('Консультация по курсу')" class="btn-dark font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full">
+          [ЗАПИСАТЬСЯ]
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION: White Studio + Giant Condensed Typography + Transparent Glass Sphere + Diamond -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-20 pb-6 px-5 sm:px-10 select-none overflow-hidden">
+      <!-- Top Subtitle -->
+      <div class="max-w-[1440px] w-full mx-auto flex justify-between items-center pt-2 font-mono-code text-[11px] uppercase tracking-widest text-[#0a0b0e]/60">
+        <span>Авторская программа индивидуального сопровождения</span>
+        <span class="hidden sm:inline" id="sphere-readout">СФЕРА: 0% РАСКРЫТИЯ</span>
+      </div>
+
+      <!-- Asymmetric Editorial Split Layout: Left Typography + Right 3D Crystal Sphere -->
+      <div class="max-w-[1440px] w-full mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 items-center gap-8 py-6">
+        <div class="lg:col-span-6 text-left pointer-events-none z-20">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#0a0b0e]/15 bg-white/75 backdrop-blur-sm font-mono-code text-[10px] uppercase tracking-widest text-[#0a0b0e]/75 mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#0a0b0e]"></span>
+            <span>1 МЕСЯЦ · БЕРУ ЗА РУКУ И ИДЁМ ВМЕСТЕ</span>
+          </div>
+          <h1 class="font-display-condensed text-[#0a0b0e] leading-[0.88] tracking-[-0.02em]"
+              style="font-size: clamp(3.6rem, 8.2vw, 8.2rem);">
+            РИЕЛТОР<br />НОВОГО<br />ВРЕМЕНИ
+          </h1>
+          <p class="text-sm sm:text-base text-[#0a0b0e]/70 mt-5 max-w-md leading-relaxed">
+            За месяц спроектируем Ваш AI-офис, настроим первых цифровых сотрудников и проверим их работу на Ваших задачах.
+          </p>
+          <div class="pointer-events-auto flex flex-wrap gap-2 mt-5">
+            <a href="jarvis.html" class="btn-dark rounded-full px-4 py-2 text-sm font-semibold">Узнать подробнее о программе</a>
+            <a href="https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I" class="rounded-full border border-black/25 bg-white/85 px-4 py-2 text-sm font-semibold">Обсудить мой AI-офис</a>
+          </div>
+        </div>
+
+        <!-- Right column spacer reserved for the 3D glass sphere & diamond -->
+        <div class="lg:col-span-6 h-[320px] sm:h-[420px] lg:h-[520px] pointer-events-none"></div>
+      </div>
+
+      <!-- Bottom Interactive Bar matching Noomo Labs ("ARE YOU READY..." + "CLICK AND HOLD" + progress pill) -->
+      <div class="max-w-[1440px] w-full mx-auto relative z-20">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2.5">
+          <div>
+            <p class="font-display-condensed text-xl sm:text-2xl tracking-wide text-[#0a0b0e] uppercase leading-none">
+              ВАШ AI-ОФИС
+            </p>
+            <p class="text-xs sm:text-sm text-[#0a0b0e]/70 mt-1 max-w-xl">
+              Наведите курсор на стеклянную сферу справа или зажмите кнопку мыши, чтобы раскрыть грани.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 self-start sm:self-end">
+            <a href="#program" class="font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-[#0a0b0e]/25 bg-white/80 hover:bg-[#0a0b0e] hover:text-white transition-colors">
+              ПРОГРАММА
+            </a>
+            <button type="button" id="hold-trigger" class="font-display-condensed text-lg sm:text-xl tracking-wider uppercase text-[#0a0b0e] hover:opacity-70 transition-opacity cursor-pointer">
+              НАЖМИТЕ И УДЕРЖИВАЙТЕ
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Pill Bar with Sound Toggle & Hold Progress Track -->
+        <div class="flex items-center gap-3">
+          <button id="sound-toggle" type="button" class="shrink-0 flex items-center gap-2 px-3 py-1 rounded-full bg-[#0a0b0e] text-white font-mono-code text-[10px] uppercase tracking-wider" title="Звук стекла">
+            <span class="w-3.5 h-3.5 rounded-full bg-white inline-block" id="sound-dot"></span>
+            <span id="sound-label">OFF</span>
+          </button>
+
+          <div class="hold-track flex-1">
+            <div class="hold-fill" id="hold-fill"></div>
+          </div>
+
+          <button type="button" id="burst-btn" class="shrink-0 w-7 h-7 rounded-full bg-[#0a0b0e] text-white flex items-center justify-center hover:scale-105 transition-transform" title="Раскрыть стеклянную сферу">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M2 9h20"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY SECTION -->
+    <section id="analyst-example" class="relative z-10 py-20 px-5 sm:px-10 bg-white border-t border-black/10">
+      <div class="max-w-7xl mx-auto">
+        <p class="font-mono-code text-sm mb-3">Демонстрационный пример</p>
+        <h2 class="font-display-condensed text-4xl sm:text-6xl mb-5">Как AI-аналитик готовит подборку</h2>
+        <p class="max-w-3xl mb-7">Покупатель ищет квартиру до 9 млн ₽, со сдачей в 2027 году и отделкой. Риелтор даёт аналитику запрос и данные по трём ЖК. Аналитик собирает сравнение и отмечает, где нужно уточнить условия.</p>
+        <div class="glass-panel rounded-3xl p-4 sm:p-7">
+          <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Сравнение жилых комплексов">
+            <table class="w-full min-w-[500px] text-left text-sm">
+              <caption class="text-left mb-3 font-semibold">Сравнение трёх условных ЖК</caption>
+              <thead><tr class="border-b border-black/20"><th class="py-2 pr-3">Объект</th><th class="py-2 pr-3">Цена</th><th class="py-2 pr-3">Сдача</th><th class="py-2">Отделка</th></tr></thead>
+              <tbody>
+                <tr class="border-b border-black/10"><th scope="row" class="py-3">ЖК А</th><td>8,6 млн ₽</td><td>2027</td><td>Готовая</td></tr>
+                <tr class="border-b border-black/10"><th scope="row" class="py-3">ЖК Б</th><td>8,2 млн ₽</td><td>2027</td><td>Предчистовая</td></tr>
+                <tr><th scope="row" class="py-3">ЖК В</th><td>8,9 млн ₽</td><td>2028</td><td>Готовая</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-4"><strong>Результат.</strong> ЖК А подходит по всем трём критериям. Перед отправкой риелтор подтверждает наличие квартиры, актуальную цену, срок сдачи и состав отделки.</p>
+        </div>
+      </div>
+    </section>
+    <section id="philosophy" class="relative z-10 py-24 px-5 sm:px-10 bg-white/90 border-t border-black/10">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="font-display-condensed text-4xl sm:text-6xl mb-5">Ваш будущий цифровой офис</h2>
+        <p class="max-w-3xl mb-10 text-black/70">У каждого AI-сотрудника своя роль, рабочие инструкции и критерии результата. Вы ставите задачу, получаете результат, проверяете его и принимаете решение. Помощники доступны 24/7 при доступности выбранных сервисов.</p>
+        <div class="team-grid grid gap-5 md:grid-cols-2 lg:grid-cols-3"><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Маркетолог</h3><p>Помогает анализировать целевую аудиторию, разрабатывать маркетинговую стратегию, находить точки роста, создавать рекламные офферы и планировать продвижение.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Контент-Менеджер</h3><p>Помогает создавать контент-планы, посты, сценарии Reels, экспертные публикации, тексты для видеороликов и материалы для социальных сетей.</p><p>В связке с инструментами генерации изображений и видео может стать основой полноценного цифрового контент-производства.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Аналитик Недвижимости</h3><p>Сравнивает жилые комплексы, структурирует информацию об объектах, анализирует предложения, помогает рассчитывать доходность и формировать аналитические отчёты.</p><p>Работает с доступными и проверяемыми данными.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Наставник</h3><p>Помогает ставить цели, структурировать задачи, формировать планы, анализировать прогресс и находить решения для развития бизнеса.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Помощник По Юридическим Вопросам</h3><p>Помогает разбирать правовые вопросы, структурировать документы, формировать чек-листы, изучать нормативные требования и готовить вопросы для профильного юриста.</p><p>Не заменяет профессиональную юридическую проверку сделки.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Ассистент По Продажам</h3><p>Подготавливает коммерческие предложения, скрипты переговоров, ответы на возражения, персонализированные подборки и сценарии клиентских коммуникаций.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Бизнес-Ассистент</h3><p>Помогает планировать задачи, систематизировать информацию, готовить отчёты, контролировать рабочие процессы и координировать доступные инструменты.</p></article><article class="team-glass rounded-3xl p-7">
+<h3 class="text-xl font-bold mb-3">Ваш тренажёр переговоров</h3>
+<p>В программе настроим тренажёр в ChatGPT. Он сыграет клиента по Вашему сценарию: покупателя, который сомневается в цене, или собственника, который возражает против комиссии.</p>
+<p>После диалога ChatGPT разберёт Ваши ответы, выделит сильные и слабые стороны и предложит формулировки, которые можно попробовать в следующем раунде.</p>
+</article></div>
+      </div>
+    </section>
+    <section id="program" class="py-24 px-5 sm:px-10 bg-[#f6f7fa]/90 backdrop-blur-md border-t border-black/10">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-14">
+          <p class="font-mono-code text-xs tracking-[0.2em] uppercase mb-3 text-black/55">ИНДИВИДУАЛЬНЫЙ МАРШРУТ</p>
+          <h2 class="font-display-condensed text-4xl sm:text-6xl leading-[0.95] text-[#0a0b0e]">
+            КАК МЫ СОЗДАДИМ ВАШ AI-ОФИС
+          </h2>
+        </div>
+
+        <p class="max-w-2xl mb-7 text-black/70">Начнём с аудита и подберём роли под Вашу специализацию. Число сотрудников за месяц зависит от Ваших задач и сложности настройки. Познакомимся с вайб-кодингом и попробуем собрать небольшой рабочий инструмент, описывая задачу ИИ обычным языком.</p><div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div class="lg:col-span-5 flex flex-col gap-3" id="module-list"></div>
+          <div class="lg:col-span-7 glass-panel rounded-3xl p-8 sm:p-10 min-h-[340px] flex flex-col justify-between" id="module-detail"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT EXPERT SECTION -->
+    <section id="expert" class="relative z-10 py-24 px-5 sm:px-10 bg-white/90 border-t border-black/10">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <img src="elena-gumen.webp" alt="Елена Гумен" width="940" height="1080" loading="lazy" class="lg:col-span-5 w-full max-w-lg rounded-3xl object-cover">
+        <div class="lg:col-span-7">
+          <p class="font-mono-code text-sm uppercase mb-3">Автор программы</p>
+          <h2 class="font-display-condensed text-5xl sm:text-7xl mb-5">Елена Гумен</h2>
+          <p class="text-lg leading-relaxed mb-6">Риелтор, инвест-брокер и предприниматель. Более 25 лет предпринимательского опыта и 150+ сделок с недвижимостью.</p>
+          <p class="text-base leading-relaxed mb-7 text-black/70">Я работаю с покупателями и инвесторами, в том числе дистанционно. На сопровождении помогу Вам выбрать задачи для внедрения ИИ, собрать первые инструменты и проверить, как они работают на Ваших объектах, в контенте и общении с клиентами.</p>
+          <a href="jarvis.html" class="btn-dark rounded-full px-6 py-3 inline-block">Узнать подробнее о программе</a>
+        </div>
+      </div>
+    </section>
+    <section id="reviews" class="reviews-section">
+      <div class="reviews-wrap">
+        <div class="reviews-heading">
+          <div><h2 class="font-display-condensed">Отзывы о работе с Еленой</h2>
+          <p>Об обучении, личном бренде и первых шагах с ИИ.</p></div>
+          <a class="reviews-all" href="https://t.me/otzivi_elena_gumen">Прочитать все отзывы</a>
+        </div>
+        <div class="reviews-grid"><a class="review-card" href="reviews/review-1.webp"><img src="reviews/review-1.webp" alt="Скриншот отзыва 1" width="924" height="1279" loading="lazy"><span>Открыть отзыв</span></a><a class="review-card" href="reviews/review-2.webp"><img src="reviews/review-2.webp" alt="Скриншот отзыва 2" width="655" height="1280" loading="lazy"><span>Поняла, как применять ИИ в работе</span></a><a class="review-card" href="reviews/review-3.webp"><img src="reviews/review-3.webp" alt="Скриншот отзыва 3" width="987" height="1145" loading="lazy"><span>Упаковал личный бренд и получил идеи для контента</span></a><a class="review-card" href="reviews/review-4.webp"><img src="reviews/review-4.webp" alt="Скриншот отзыва 4" width="1057" height="1273" loading="lazy"><span>Открыть отзыв</span></a><a class="review-card" href="reviews/review-5.webp"><img src="reviews/review-5.webp" alt="Скриншот отзыва 5" width="1180" height="1172" loading="lazy"><span>Открыть отзыв</span></a><a class="review-card" href="reviews/review-6.webp"><img src="reviews/review-6.webp" alt="Скриншот отзыва 6" width="1077" height="1278" loading="lazy"><span>Поделилась опытом работы с AI-ассистентом</span></a><a class="review-card" href="reviews/review-7.webp"><img src="reviews/review-7.webp" alt="Скриншот отзыва 7" width="535" height="926" loading="lazy"><span>Открыть отзыв</span></a><a class="review-card" href="reviews/review-8.webp"><img src="reviews/review-8.webp" alt="Скриншот отзыва 8" width="531" height="1207" loading="lazy"><span>Увидела свои сильные стороны в брендбуке</span></a></div>
+      </div>
+      <dialog class="review-dialog" aria-label="Просмотр отзыва">
+        <button type="button" aria-label="Закрыть отзыв">Закрыть</button>
+        <img alt="">
+      </dialog>
+    </section>
+    <section id="formats" class="relative z-10 py-24 px-5 sm:px-10 bg-[#f6f7fa] border-t border-black/10">
+      <div class="max-w-7xl mx-auto glass-panel rounded-3xl p-7 sm:p-12 grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h2 class="font-display-condensed text-4xl sm:text-6xl mb-5">Беру за руку и идём вместе</h2>
+          <ul class="space-y-3 text-black/75">
+            <li>1 месяц персональной работы онлайн</li>
+            <li>Встречи раз в неделю по 1–2 часа</li>
+            <li>График согласуем вместе</li>
+            <li>Обратная связь ежедневно, кроме воскресенья</li><li>Аудит, настройка AI-сотрудников, инструкции и видеоуроки</li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-display-condensed text-5xl mb-2">50 000 ₽</p>
+          <p class="mb-5 text-black/70">Предоплата 100%. Подписки, API и сторонние сервисы оплачиваются отдельно, если они нужны и согласованы с Вами.</p>
+          <div class="contact-links"><a href="https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I">Написать в MAX</a><a href="https://t.me/Elena_Gumen">Telegram</a><a href="tel:+79089641945">Позвонить</a></div>
+        </div>
+      <p style="margin-top:1rem;font-size:.92rem">Дата старта и условия договора согласуются индивидуально. На сайте оплата не принимается. Информация о программе носит ознакомительный характер и не является публичной офертой.</p></div>
+    </section>
+    <section class="relative z-10 py-24 px-5 sm:px-10 bg-white">
+      <div class="max-w-4xl mx-auto faq"><h2 class="font-display-condensed text-4xl sm:text-6xl mb-6">Частые вопросы</h2><details><summary>Мне нужно уметь программировать?</summary><p>Нет. Мы будем использовать доступные инструменты, настраивать AI-помощников и создавать рабочие процессы с учётом Вашего технического уровня.</p></details><details><summary>У меня совсем нет опыта работы с нейросетями. Я справлюсь?</summary><p>Да. Мы начнём с необходимых основ и постепенно перейдём к созданию Ваших первых цифровых сотрудников.</p></details><details><summary>Это будут настоящие AI-сотрудники или просто промпты?</summary><p>Мы будем создавать специализированных AI-помощников с определёнными ролями, инструкциями, знаниями и рабочими сценариями. По мере необходимости сможем подключать инструменты и автоматизации. Уровень самостоятельной работы зависит от выбранных сервисов и интеграций.</p></details><details><summary>Они действительно могут работать 24/7?</summary><p>Цифровые помощники доступны круглосуточно при доступности используемых сервисов. Отдельные процессы могут выполняться автоматически по расписанию или событию, если настроены необходимые интеграции. Задачи, требующие профессионального контроля, остаются за Вами.</p></details><details><summary>Сколько цифровых сотрудников мы создадим?</summary><p>Это определим на старте. Важно не количество, а качество и практическая польза. Сначала создаём наиболее востребованных сотрудников, тестируем их и затем расширяем команду.</p></details><details><summary>Смогу ли я пользоваться созданными инструментами после программы?</summary><p>Да, Вы сможете продолжать использовать созданные в доступных Вам сервисах настройки, промпты, инструкции и материалы с учётом условий соответствующих платформ и подписок.</p></details><details><summary>Как записаться?</summary><p>Напишите мне в MAX или Telegram. Обсудим Ваши цели, текущие задачи и возможную структуру будущего AI-офиса.</p></details></div>
+    </section>
+  </main>
+  <footer class="py-10 px-5 sm:px-10 bg-white border-t border-black/10 relative z-10">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-mono-code text-xs text-black/65">
+      <span>© 2026 «РИЕЛТОР НОВОГО ВРЕМЕНИ». АВТОРСКАЯ ПРОГРАММА.</span>
+      <div class="flex items-center gap-6">
+        <a href="#hero" class="hover:text-black transition-colors">Наверх</a>
+        <button type="button" onclick="openModal('Заявка из подвала сайта')" class="hover:text-black transition-colors">Связаться</button>
+      </div>
+    </div>
+  <div style="max-width:90rem;margin:1rem auto 0;padding-top:1rem;border-top:1px solid #77819544;font-size:.92rem;line-height:1.6">
+  <strong>ИП Гумен Елена Леонидовна</strong><br>
+  ИНН 253400673187 · ОГРНИП 324237500462927<br>
+  <a href="privacy.html" style="text-decoration:underline">Политика обработки персональных данных</a>
+</div></footer>
+
+  <!-- Application Modal -->
+  <script>
+    // =========================================================================
+    // 1. COURSE PROGRAM MODULES & UI
+    // =========================================================================
+    const MODULES = [
+      { num:'01', title:'Аудит и выбор задачи', duration:'Неделя 1', summary:'Зафиксируем Вашу точку А и результат, к которому хотите прийти. Вместе найдём процесс, где внедрение ИИ даст заметный эффект.', outcomes:['Карта текущих процессов','Задача для первого внедрения','Критерии результата'] },
+      { num:'02', title:'Настройка AI-сотрудников', duration:'Неделя 2', summary:'Создадим приоритетных AI-сотрудников: зададим им роли, инструкции, рабочий контекст и критерии качества.', outcomes:['Первые AI-сотрудники под Ваши задачи','Адаптированные промпты','Инструкция по проверке результата'] },
+      { num:'03', title:'Внедрение в работу', duration:'Неделя 3', summary:'Применим инструмент в Вашей обычной работе. На встрече разберём, что получилось и где нужна корректировка.', outcomes:['Проверка на реальных рабочих задачах','Личная обратная связь','Докрутка инструмента'] },
+      { num:'04', title:'Закрепление и план развития', duration:'Неделя 4', summary:'Соберём то, что работает, в понятный порядок действий. Наметим следующие процессы, в которых Вам имеет смысл внедрить ИИ.', outcomes:['Персональная система работы с ИИ','Промпты и инструкции под рукой','План развития цифровой команды'] },
+    ];
+
+    let activeModuleIdx = 0;
+
+    function renderModules() {
+      const listEl = document.getElementById('module-list');
+      const detailEl = document.getElementById('module-detail');
+      if (!listEl || !detailEl) return;
+
+      listEl.innerHTML = MODULES.map((m, idx) => {
+        const isActive = idx === activeModuleIdx;
+        return `
+          <button type="button" onclick="selectModule(${idx})"
+            class="text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 ${isActive ? 'bg-white border-[#0a0b0e] shadow-lg' : 'border-black/10 bg-white/50 hover:bg-white'}">
+            <div class="flex items-center gap-4">
+              <span class="font-mono-code text-xs px-2.5 py-1 rounded-full ${isActive ? 'bg-[#0a0b0e] text-white' : 'bg-black/5 text-black/60'}">${m.num}</span>
+              <span class="font-semibold text-sm sm:text-base text-[#0a0b0e]">${m.title}</span>
+            </div>
+            <span class="font-mono-code text-[11px] shrink-0 text-black/55">${m.duration}</span>
+          </button>
+        `;
+      }).join('');
+
+      const active = MODULES[activeModuleIdx];
+      detailEl.innerHTML = `
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="font-mono-code text-xs uppercase tracking-widest px-3 py-1 rounded-full bg-[#0a0b0e] text-white">
+              МОДУЛЬ ${active.num} • ${active.duration}
+            </span>
+          </div>
+          <h3 class="font-display-condensed text-3xl sm:text-5xl mb-4 text-[#0a0b0e]">${active.title}</h3>
+          <p class="text-sm sm:text-base leading-relaxed mb-8 text-black/70">${active.summary}</p>
+          <div class="space-y-3">
+            <div class="font-mono-code text-[11px] uppercase tracking-widest mb-2 text-black/55">Ключевые результаты модуля:</div>
+            ${active.outcomes.map(o => `
+              <div class="flex items-start gap-3 text-sm text-[#0a0b0e]">
+                <span class="w-1.5 h-1.5 rotate-45 mt-2 shrink-0 bg-[#0a0b0e]"></span>
+                <span>${o}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="mt-8 pt-6 border-t border-black/10 flex items-center justify-between">
+          <span class="text-xs text-black/60">Маршрут адаптируем под Ваши цели</span>
+          <button type="button" onclick="openModal('Программа: Модуль ${active.num}')" class="text-xs font-mono-code uppercase tracking-wider inline-flex items-center gap-1.5 font-bold hover:opacity-70">
+            <span>ОБСУДИТЬ УЧАСТИЕ</span>
+            <span>↗</span>
+          </button>
+        </div>
+      `;
+    }
+
+    window.selectModule = function(idx) {
+      activeModuleIdx = idx;
+      renderModules();
+    };
+
+    window.openModal = function() {
+      location.href = 'https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I';
+    };
+
+    // 2. SUBTLE WEB AUDIO GLASS CHIMES
+    // =========================================================================
+    let audioCtx = null;
+    let soundEnabled = false;
+    let lastChimeTime = 0;
+
+    function playCrystalChime(intensity = 0.5) {
+      if (!soundEnabled || !audioCtx) return;
+      const now = performance.now();
+      if (now - lastChimeTime < 140) return;
+      lastChimeTime = now;
+
+      const freqs = [587.33, 659.25, 783.99, 987.77, 1174.66, 1318.51];
+      const freq = freqs[Math.floor(Math.random() * freqs.length)];
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(Math.min(0.045, 0.018 * intensity), audioCtx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.65);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.68);
+    }
+
+    document.getElementById('sound-toggle').addEventListener('click', function() {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled && !audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const label = document.getElementById('sound-label');
+      const dot = document.getElementById('sound-dot');
+      if (label) label.textContent = soundEnabled ? 'ON' : 'OFF';
+      if (dot) {
+        dot.style.backgroundColor = soundEnabled ? '#38bdf8' : '#ffffff';
+      }
+      if (soundEnabled) playCrystalChime(1.0);
+    });
+
+    // Pure white-silver studio environment texture with subtle architectural skyline refraction
+    function createStudioBackdropTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 1024;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createRadialGradient(512, 512, 40, 512, 512, 560);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.55, '#f6f9ff');
+      grad.addColorStop(1, '#eaf1fc');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      return tex;
+    }
+
+    // Exact Tolkowsky Round Brilliant Cut (57 Facets, wide bright table & crisp crown/pavilion)
+    function buildTolkowskyBrilliantCut() {
+      const scale = 1.62;
+      const v = (r, y, deg) => {
+        const rad = (deg * Math.PI) / 180;
+        return new THREE.Vector3(Math.cos(rad) * r * scale, y * scale, Math.sin(rad) * r * scale);
+      };
+
+      // Proportions calibrated to match the classic studio diamond photograph
+      const tableR = 0.58, tableY = 0.34;
+      const starR = 0.80, starY = 0.20;
+      const girdleR = 1.00, girdleTopY = 0.025, girdleBotY = -0.025;
+      const pavMidR = 0.72, pavMidY = -0.25;
+      const culet = new THREE.Vector3(0, -0.84 * scale, 0);
+      const tableCenter = new THREE.Vector3(0, tableY * scale, 0);
+
+      const facets = [];
+      const sparkleAnchors = [];
+
+      const pushFacet = (tris) => {
+        const center = new THREE.Vector3();
+        let count = 0;
+        tris.forEach(t => {
+          center.add(t[0]).add(t[1]).add(t[2]);
+          count += 3;
+        });
+        center.divideScalar(count);
+        facets.push({ tris, center });
+      };
+
+      for (let k = 0; k < 8; k++) {
+        const a0 = k * 45;
+        const a1 = (k + 1) * 45;
+        const t0 = v(tableR, tableY, a0);
+        const t1 = v(tableR, tableY, a1);
+        pushFacet([[tableCenter.clone(), t1, t0]]);
+        sparkleAnchors.push({
+          pos: t0.clone(),
+          normal: new THREE.Vector3(Math.cos(a0 * Math.PI / 180) * 0.4, 0.9, Math.sin(a0 * Math.PI / 180) * 0.4).normalize()
+        });
+      }
+
+      for (let k = 0; k < 8; k++) {
+        const a0 = k * 45;
+        const aHalf = a0 + 22.5;
+        const aNext = (k + 1) * 45;
+        const aPrevHalf = a0 - 22.5;
+
+        const t0 = v(tableR, tableY, a0);
+        const t1 = v(tableR, tableY, aNext);
+
+        const sRight = v(starR, starY, aHalf);
+        const sLeft = v(starR, starY, aPrevHalf);
+
+        const g0 = v(girdleR, girdleTopY, a0);
+        const gHalf = v(girdleR, girdleTopY, aHalf);
+        const gNext = v(girdleR, girdleTopY, aNext);
+
+        const gb0 = v(girdleR, girdleBotY, a0);
+        const gbHalf = v(girdleR, girdleBotY, aHalf);
+        const gbNext = v(girdleR, girdleBotY, aNext);
+
+        const pRight = v(pavMidR, pavMidY, aHalf);
+        const pLeft = v(pavMidR, pavMidY, aPrevHalf);
+
+        pushFacet([[t0, t1, sRight]]);
+        pushFacet([[t0, sRight, g0], [t0, g0, sLeft]]);
+        sparkleAnchors.push({ pos: sRight.clone(), normal: sRight.clone().normalize() });
+        sparkleAnchors.push({ pos: g0.clone(), normal: g0.clone().normalize() });
+
+        pushFacet([[sRight, gHalf, g0]]);
+        pushFacet([[sRight, gNext, gHalf]]);
+
+        pushFacet([[g0, gHalf, gbHalf], [g0, gbHalf, gb0]]);
+        pushFacet([[gHalf, gNext, gbNext], [gHalf, gbNext, gbHalf]]);
+
+        pushFacet([[gb0, gbHalf, pRight]]);
+        pushFacet([[gbHalf, gbNext, pRight]]);
+
+        pushFacet([[gb0, pRight, culet.clone()], [gb0, culet.clone(), pLeft]]);
+      }
+
+      return { facets, sparkleAnchors };
+    }
+
+    function createSolidShardGeometry(tris, center) {
+      const innerApex = center.clone().multiplyScalar(0.62);
+      const localCenter = center.clone();
+      const positions = [];
+      const tmpE1 = new THREE.Vector3();
+      const tmpE2 = new THREE.Vector3();
+      const tmpN = new THREE.Vector3();
+      const tmpTriCenter = new THREE.Vector3();
+
+      const pushOutwardTri = (a, b, c, refDir) => {
+        tmpE1.subVectors(b, a);
+        tmpE2.subVectors(c, a);
+        tmpN.crossVectors(tmpE1, tmpE2);
+        if (tmpN.dot(refDir) < 0) {
+          const swap = b; b = c; c = swap;
+        }
+        positions.push(
+          a.x - localCenter.x, a.y - localCenter.y, a.z - localCenter.z,
+          b.x - localCenter.x, b.y - localCenter.y, b.z - localCenter.z,
+          c.x - localCenter.x, c.y - localCenter.y, c.z - localCenter.z
+        );
+      };
+
+      tris.forEach(t => pushOutwardTri(t[0], t[1], t[2], center));
+
+      tris.forEach(t => {
+        tmpTriCenter.addVectors(t[0], t[2]).add(innerApex).divideScalar(3).sub(center);
+        pushOutwardTri(t[0], t[2], innerApex, tmpTriCenter);
+        tmpTriCenter.addVectors(t[1], t[0]).add(innerApex).divideScalar(3).sub(center);
+        pushOutwardTri(t[1], t[0], innerApex, tmpTriCenter);
+        tmpTriCenter.addVectors(t[2], t[1]).add(innerApex).divideScalar(3).sub(center);
+        pushOutwardTri(t[2], t[1], innerApex, tmpTriCenter);
+      });
+
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geom.computeVertexNormals();
+      return geom;
+    }
+
+    // Thick beveled curved glass sphere tiles matching the Noomo Labs segmented glass sphere
+    function createCurvedGlassShellShards(radius, thickness) {
+      const shells = [];
+      const latBands = 6;
+      const lonCounts = [8, 12, 14, 14, 12, 8];
+      const latGap = 0.028;
+      const lonGap = 0.028;
+
+      for (let b = 0; b < latBands; b++) {
+        const theta0 = (b / latBands) * Math.PI + latGap;
+        const theta1 = ((b + 1) / latBands) * Math.PI - latGap;
+        const nLon = lonCounts[b];
+
+        for (let s = 0; s < nLon; s++) {
+          const phi0 = (s / nLon) * Math.PI * 2 + lonGap;
+          const phi1 = ((s + 1) / nLon) * Math.PI * 2 - lonGap;
+
+          const thetaMid = (theta0 + theta1) * 0.5;
+          const phiMid = (phi0 + phi1) * 0.5;
+          const center = new THREE.Vector3(
+            radius * Math.sin(thetaMid) * Math.cos(phiMid),
+            radius * Math.cos(thetaMid),
+            radius * Math.sin(thetaMid) * Math.sin(phiMid)
+          );
+
+          const segU = 6;
+          const segV = 4;
+          const rOut = radius + thickness * 0.5;
+          const rIn = radius - thickness * 0.5;
+
+          const positions = [];
+          const normals = [];
+          const isEdge = []; // 1.0 on beveled glass edges, 0.0 on main clear face
+
+          const pointOnSphere = (r, th, ph) => new THREE.Vector3(
+            r * Math.sin(th) * Math.cos(ph),
+            r * Math.cos(th),
+            r * Math.sin(th) * Math.sin(ph)
+          );
+
+          const pushQuad = (p00, p10, p11, p01, n00, n10, n11, n01, edgeFlag) => {
+            const tri1 = [p00, p10, p11];
+            const nTri1 = [n00, n10, n11];
+            const tri2 = [p00, p11, p01];
+            const nTri2 = [n00, n11, n01];
+
+            [tri1, tri2].forEach((tri, tIdx) => {
+              const nArr = tIdx === 0 ? nTri1 : nTri2;
+              for (let k = 0; k < 3; k++) {
+                positions.push(tri[k].x - center.x, tri[k].y - center.y, tri[k].z - center.z);
+                normals.push(nArr[k].x, nArr[k].y, nArr[k].z);
+                isEdge.push(edgeFlag);
+              }
+            });
+          };
+
+          for (let iv = 0; iv < segV; iv++) {
+            const v0 = iv / segV;
+            const v1 = (iv + 1) / segV;
+            const thA = theta0 + (theta1 - theta0) * v0;
+            const thB = theta0 + (theta1 - theta0) * v1;
+
+            for (let iu = 0; iu < segU; iu++) {
+              const u0 = iu / segU;
+              const u1 = (iu + 1) / segU;
+              const phA = phi0 + (phi1 - phi0) * u0;
+              const phB = phi0 + (phi1 - phi0) * u1;
+
+              const n00 = pointOnSphere(1, thA, phA);
+              const n10 = pointOnSphere(1, thA, phB);
+              const n11 = pointOnSphere(1, thB, phB);
+              const n01 = pointOnSphere(1, thB, phA);
+
+              // Outer face
+              pushQuad(
+                pointOnSphere(rOut, thA, phA),
+                pointOnSphere(rOut, thA, phB),
+                pointOnSphere(rOut, thB, phB),
+                pointOnSphere(rOut, thB, phA),
+                n00, n10, n11, n01, 0.0
+              );
+
+              // Inner face
+              pushQuad(
+                pointOnSphere(rIn, thA, phB),
+                pointOnSphere(rIn, thA, phA),
+                pointOnSphere(rIn, thB, phA),
+                pointOnSphere(rIn, thB, phB),
+                n10.clone().negate(), n00.clone().negate(), n01.clone().negate(), n11.clone().negate(), 0.0
+              );
+            }
+          }
+
+          // Thick beveled perimeter walls (catch light & chromatic dispersion like thick crystal glass)
+          for (let iu = 0; iu < segU; iu++) {
+            const phA = phi0 + (phi1 - phi0) * (iu / segU);
+            const phB = phi0 + (phi1 - phi0) * ((iu + 1) / segU);
+
+            const nTop = new THREE.Vector3(-Math.cos(theta0) * Math.cos((phA + phB) * 0.5), Math.sin(theta0), -Math.cos(theta0) * Math.sin((phA + phB) * 0.5)).normalize();
+            pushQuad(
+              pointOnSphere(rIn, theta0, phA),
+              pointOnSphere(rIn, theta0, phB),
+              pointOnSphere(rOut, theta0, phB),
+              pointOnSphere(rOut, theta0, phA),
+              nTop, nTop, nTop, nTop, 1.0
+            );
+
+            const nBot = nTop.clone().negate();
+            pushQuad(
+              pointOnSphere(rOut, theta1, phA),
+              pointOnSphere(rOut, theta1, phB),
+              pointOnSphere(rIn, theta1, phB),
+              pointOnSphere(rIn, theta1, phA),
+              nBot, nBot, nBot, nBot, 1.0
+            );
+          }
+
+          for (let iv = 0; iv < segV; iv++) {
+            const thA = theta0 + (theta1 - theta0) * (iv / segV);
+            const thB = theta0 + (theta1 - theta0) * ((iv + 1) / segV);
+
+            const nLeft = new THREE.Vector3(Math.sin(phi0), 0, -Math.cos(phi0)).normalize();
+            pushQuad(
+              pointOnSphere(rOut, thA, phi0),
+              pointOnSphere(rOut, thB, phi0),
+              pointOnSphere(rIn, thB, phi0),
+              pointOnSphere(rIn, thA, phi0),
+              nLeft, nLeft, nLeft, nLeft, 1.0
+            );
+
+            const nRight = new THREE.Vector3(-Math.sin(phi1), 0, Math.cos(phi1)).normalize();
+            pushQuad(
+              pointOnSphere(rIn, thA, phi1),
+              pointOnSphere(rIn, thB, phi1),
+              pointOnSphere(rOut, thB, phi1),
+              pointOnSphere(rOut, thA, phi1),
+              nRight, nRight, nRight, nRight, 1.0
+            );
+          }
+
+          const geom = new THREE.BufferGeometry();
+          geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+          geom.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+          geom.setAttribute('aIsEdge', new THREE.Float32BufferAttribute(isEdge, 1));
+
+          shells.push({
+            geom,
+            center,
+            outDir: center.clone().normalize(),
+            rotAxis: new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize()
+          });
+        }
+      }
+
+      return shells;
+    }
+
+    function initDiamondWebGL() {
+      if (typeof THREE === 'undefined') return;
+      const canvas = document.getElementById('diamond-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0.12, 7.2);
+      camera.lookAt(0, -0.02, 0);
+
+      const rootGroup = new THREE.Group();
+      scene.add(rootGroup);
+
+      // 1. Inner Intact Photorealistic Ice-White Diamond (matching the reference photo)
+      const diamondGroup = new THREE.Group();
+      diamondGroup.scale.setScalar(0.68);
+      rootGroup.add(diamondGroup);
+
+      // 2. Outer Ultra-Transparent Refracting Glass Sphere (matching Noomo Labs)
+      const glassSphereGroup = new THREE.Group();
+      rootGroup.add(glassSphereGroup);
+
+      // Position 3D composition into the right column on desktop, centered below text on mobile
+      function updateRootLayout() {
+        const isDesktop = window.innerWidth >= 1024;
+        const aspect = window.innerWidth / window.innerHeight;
+        if (isDesktop) {
+          rootGroup.userData.baseX = Math.min(1.65, aspect * 0.92);
+          rootGroup.userData.baseY = 0.06;
+          rootGroup.userData.baseScale = 0.78;
+        } else {
+          rootGroup.userData.baseX = 0;
+          rootGroup.userData.baseY = -0.62;
+          rootGroup.userData.baseScale = 0.64;
+        }
+      }
+      updateRootLayout();
+
+      const studioBackdropTex = createStudioBackdropTexture();
+      const { facets, sparkleAnchors } = buildTolkowskyBrilliantCut();
+
+      const diamondUniforms = {
+        uTime: { value: 0 }
+      };
+
+      const sharedVertexShader = `
+        attribute float aIsEdge;
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPos;
+        varying vec4 vClipPos;
+        varying float vIsEdge;
+        void main() {
+          vIsEdge = aIsEdge;
+          vec4 worldPos = modelMatrix * vec4(position, 1.0);
+          vWorldPos = worldPos.xyz;
+          vWorldNormal = normalize(mat3(modelMatrix) * normal);
+          vClipPos = projectionMatrix * viewMatrix * worldPos;
+          gl_Position = vClipPos;
+        }
+      `;
+
+      // Photorealistic white-studio diamond shader (crisp ice-blue/silver facets, dark contrast arrows, bright white table)
+      const diamondFragmentShader = `
+        uniform float uTime;
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPos;
+
+        vec3 sampleWhiteStudioEnv(vec3 dir) {
+          vec3 d = normalize(dir);
+          // Bright white cyclorama studio base with cool ice-blue tint
+          vec3 env = mix(vec3(0.76, 0.82, 0.90), vec3(1.15, 1.18, 1.24), smoothstep(-0.6, 0.85, d.y));
+
+          // High-contrast dark studio flags (essential for realistic diamond facet contrast on white!)
+          float az = atan(d.z, d.x);
+          float darkBlades = smoothstep(0.45, 0.88, cos(az * 4.0 + 0.35)) * smoothstep(-0.75, 0.35, d.y);
+          env = mix(env, vec3(0.05, 0.07, 0.11), darkBlades * 0.86);
+
+          float secondaryFlags = smoothstep(0.65, 0.94, sin(az * 8.0 - 0.5)) * smoothstep(-0.5, 0.25, d.y);
+          env = mix(env, vec3(0.12, 0.16, 0.22), secondaryFlags * 0.65);
+
+          // Overhead bright softbox & studio specular lights
+          float topSoftbox = pow(max(d.y, 0.0), 6.0);
+          env += vec3(1.4, 1.45, 1.55) * topSoftbox;
+
+          float s1 = pow(max(dot(d, normalize(vec3(0.55, 0.78, 0.52))), 0.0), 80.0);
+          float s2 = pow(max(dot(d, normalize(vec3(-0.68, 0.58, 0.45))), 0.0), 64.0);
+          float s3 = pow(max(dot(d, normalize(vec3(0.15, 0.42, -0.89))), 0.0), 72.0);
+          env += vec3(4.2) * s1 + vec3(3.4) * s2 + vec3(3.0) * s3;
+
+          return env;
+        }
+
+        vec3 internalFacetNormal(vec3 dir) {
+          float az = atan(dir.z, dir.x);
+          float sector = floor((az + 3.14159265) / 0.78539816 + 0.5) * 0.78539816 - 3.14159265;
+          float slope = dir.y < 0.0 ? -0.68 : 0.56;
+          return normalize(vec3(cos(sector), slope, sin(sector)));
+        }
+
+        vec3 acesToneMap(vec3 x) {
+          const float a = 2.51;
+          const float b = 0.03;
+          const float c = 2.43;
+          const float d = 0.59;
+          const float e = 0.14;
+          return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+        }
+
+        void main() {
+          vec3 N = normalize(vWorldNormal);
+          vec3 V = normalize(cameraPosition - vWorldPos);
+          vec3 I = -V;
+
+          float NdotV = max(dot(N, V), 0.0);
+          float fresnel = 0.172 + 0.828 * pow(1.0 - NdotV, 5.0);
+
+          vec3 outerReflection = sampleWhiteStudioEnv(reflect(I, N));
+
+          vec3 rIn = refract(I, N, 1.0 / 2.417);
+          if (length(rIn) < 0.001) rIn = reflect(I, N);
+
+          vec3 nInt1 = internalFacetNormal(rIn);
+          vec3 bounce1 = reflect(rIn, -nInt1);
+          vec3 nInt2 = internalFacetNormal(bounce1);
+          vec3 exitDir = refract(bounce1, -nInt2, 2.417);
+          if (length(exitDir) < 0.001) exitDir = reflect(bounce1, -nInt2);
+
+          // Delicate spectral dispersion (rainbow fire along internal pavilion facets)
+          vec3 dispAxis = normalize(cross(N, V) + vec3(0.001, 0.002, 0.0));
+          float spread = 0.058;
+
+          float rCh = sampleWhiteStudioEnv(normalize(exitDir + dispAxis * spread)).r;
+          float gCh = sampleWhiteStudioEnv(exitDir).g;
+          float bCh = sampleWhiteStudioEnv(normalize(exitDir - dispAxis * spread)).b;
+          vec3 refractedFire = vec3(rCh, gCh, bCh);
+
+          // Cool ice-blue & silver brilliance
+          refractedFire *= vec3(0.95, 0.99, 1.06);
+
+          vec3 L1 = normalize(vec3(2.4, 4.8, 3.6));
+          vec3 L2 = normalize(vec3(-3.4, 2.8, 2.6));
+          float spec = pow(max(dot(N, normalize(L1 + V)), 0.0), 200.0) * 5.5
+                     + pow(max(dot(N, normalize(L2 + V)), 0.0), 160.0) * 4.2;
+
+          vec3 hdrColor = mix(refractedFire, outerReflection * 1.12, fresnel) + vec3(spec);
+          vec3 finalColor = acesToneMap(hdrColor * 0.96);
+
+          gl_FragColor = vec4(finalColor, 1.0);
+        }
+      `;
+
+      const diamondMat = new THREE.ShaderMaterial({
+        uniforms: diamondUniforms,
+        vertexShader: sharedVertexShader,
+        fragmentShader: diamondFragmentShader,
+        transparent: false,
+        side: THREE.FrontSide
+      });
+
+      facets.forEach((f) => {
+        const geom = createSolidShardGeometry(f.tris, f.center);
+        geom.setAttribute('aIsEdge', new THREE.Float32BufferAttribute(new Float32Array(geom.attributes.position.count), 1));
+        const mesh = new THREE.Mesh(geom, diamondMat);
+        mesh.position.copy(f.center);
+        diamondGroup.add(mesh);
+      });
+
+      // Soft contact shadow directly underneath the diamond culet on the white studio floor
+      const shadowCanvas = document.createElement('canvas');
+      shadowCanvas.width = 256;
+      shadowCanvas.height = 256;
+      const sCtx = shadowCanvas.getContext('2d');
+      const sGrad = sCtx.createRadialGradient(128, 128, 8, 128, 128, 120);
+      sGrad.addColorStop(0, 'rgba(15, 23, 42, 0.22)');
+      sGrad.addColorStop(0.45, 'rgba(15, 23, 42, 0.07)');
+      sGrad.addColorStop(1, 'rgba(15, 23, 42, 0.0)');
+      sCtx.fillStyle = sGrad;
+      sCtx.fillRect(0, 0, 256, 256);
+      const shadowPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.6, 2.6),
+        new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shadowCanvas), transparent: true, depthWrite: false })
+      );
+      shadowPlane.rotation.x = -Math.PI / 2;
+      shadowPlane.position.y = -1.24;
+      diamondGroup.add(shadowPlane);
+
+      // Ultra-Transparent Refracting Glass Sphere Material (Noomo Labs crystal clear glass tiles!)
+      const glassShellUniforms = {
+        uTime: { value: 0 },
+        uBackdrop: { value: studioBackdropTex }
+      };
+
+      const glassShellMat = new THREE.ShaderMaterial({
+        uniforms: glassShellUniforms,
+        vertexShader: sharedVertexShader,
+        fragmentShader: `
+          uniform float uTime;
+          uniform sampler2D uBackdrop;
+
+          varying vec3 vWorldNormal;
+          varying vec3 vWorldPos;
+          varying vec4 vClipPos;
+          varying float vIsEdge;
+
+          void main() {
+            vec3 N = normalize(vWorldNormal);
+            vec3 V = normalize(cameraPosition - vWorldPos);
+            float NdotV = abs(dot(N, V));
+
+            // Screen UV of this glass tile + optical refraction offset based on curved normal
+            vec2 screenUV = (vClipPos.xy / vClipPos.w) * 0.5 + 0.5;
+            vec3 viewNormal = normalize(mat3(viewMatrix) * N);
+
+            // Subtle chromatic optical shift across the clear glass pane
+            float iorShift = 0.018 + vIsEdge * 0.02;
+            vec2 uvR = clamp(screenUV - viewNormal.xy * (iorShift * 1.08), 0.01, 0.99);
+            vec2 uvG = clamp(screenUV - viewNormal.xy * iorShift, 0.01, 0.99);
+            vec2 uvB = clamp(screenUV - viewNormal.xy * (iorShift * 0.92), 0.01, 0.99);
+
+            vec3 refractedScene = vec3(
+              texture2D(uBackdrop, uvR).r,
+              texture2D(uBackdrop, uvG).g,
+              texture2D(uBackdrop, uvB).b
+            );
+
+            // Clean Fresnel edge definition without any dark/black reflections
+            float fresnel = pow(1.0 - NdotV, 3.0);
+
+            // Delicate rainbow dispersion shimmer along thin beveled glass edges
+            float prismPhase = NdotV * 6.0 + vWorldPos.y * 2.0 + vWorldPos.x * 1.4;
+            vec3 prism = 0.72 + 0.28 * cos(6.28318 * (prismPhase + vec3(0.0, 0.33, 0.67)));
+
+            // Studio white softbox highlights on glass curvature
+            vec3 L1 = normalize(vec3(2.2, 4.4, 3.5));
+            vec3 L2 = normalize(vec3(-3.0, 2.5, 2.8));
+            float spec1 = pow(max(dot(N, normalize(L1 + V)), 0.0), 160.0) * 1.3;
+            float spec2 = pow(max(dot(N, normalize(L2 + V)), 0.0), 95.0) * 0.75;
+
+            // Pure, crystal-clear light glass tiles
+            vec3 col = mix(refractedScene, vec3(1.0), 0.45);
+            col = mix(col, prism, (vIsEdge * 0.28 + fresnel * 0.16));
+            col += vec3(spec1 + spec2);
+
+            float alpha = clamp(
+              0.02 + fresnel * 0.22 + vIsEdge * 0.30 + (spec1 + spec2) * 0.62,
+              0.02,
+              0.68
+            );
+
+            gl_FragColor = vec4(col, alpha);
+          }
+        `,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      const rawShells = createCurvedGlassShellShards(1.76, 0.026);
+      const glassShards = rawShells.map((s, idx) => {
+        const mesh = new THREE.Mesh(s.geom, glassShellMat);
+        mesh.position.copy(s.center);
+        glassSphereGroup.add(mesh);
+
+        const jitter = new THREE.Vector3(
+          (Math.random() - 0.5) * 0.36,
+          (Math.random() - 0.5) * 0.36,
+          (Math.random() - 0.5) * 0.36
+        );
+
+        return {
+          mesh,
+          basePos: s.center.clone(),
+          outDir: s.outDir.clone().add(jitter).normalize(),
+          rotAxis: s.rotAxis,
+          currentDisp: 0,
+          velDisp: 0,
+          phase: idx * 0.31,
+          weight: 0.82 + Math.random() * 0.38
+        };
+      });
+
+      // Subtle crisp white-silver glints on diamond crown
+      const glintCount = sparkleAnchors.length;
+      const gPos = new Float32Array(glintCount * 3);
+      const gIntensity = new Float32Array(glintCount);
+      for (let i = 0; i < glintCount; i++) {
+        gPos[i * 3] = sparkleAnchors[i].pos.x;
+        gPos[i * 3 + 1] = sparkleAnchors[i].pos.y;
+        gPos[i * 3 + 2] = sparkleAnchors[i].pos.z;
+      }
+      const glintGeom = new THREE.BufferGeometry();
+      glintGeom.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
+      const glintIntensityAttr = new THREE.BufferAttribute(gIntensity, 1);
+      glintGeom.setAttribute('aIntensity', glintIntensityAttr);
+
+      const glintMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexShader: `
+          attribute float aIntensity;
+          varying float vIntensity;
+          void main() {
+            vIntensity = aIntensity;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = (18.0 + aIntensity * 58.0) * (5.5 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          varying float vIntensity;
+          void main() {
+            if (vIntensity < 0.05) discard;
+            vec2 uv = gl_PointCoord - vec2(0.5);
+            float d = length(uv);
+            float core = exp(-d * 14.0);
+            float spikeH = exp(-abs(uv.y) * 52.0) * exp(-abs(uv.x) * 4.5);
+            float spikeV = exp(-abs(uv.x) * 52.0) * exp(-abs(uv.y) * 4.5);
+            float flare = (core + spikeH + spikeV) * vIntensity;
+            gl_FragColor = vec4(vec3(0.95, 0.98, 1.0) * flare, clamp(flare, 0.0, 0.95));
+          }
+        `
+      });
+      diamondGroup.add(new THREE.Points(glintGeom, glintMat));
+
+      // Interaction state: Mouse proximity + Click-and-Hold progress bar (like Noomo Labs)
+      const mouse = new THREE.Vector2(99, 99);
+      const smoothMouse = new THREE.Vector2(0, 0);
+      let cursorSpeed = 0;
+      let lastMouse = new THREE.Vector2(0, 0);
+      let isHoveringCenter = false;
+      let isHolding = false;
+      let holdProgress = 0; // 0..1
+      let burstPulse = 0;
+
+      const updatePointer = (clientX, clientY) => {
+        const nx = (clientX / window.innerWidth) * 2 - 1;
+        const ny = -(clientY / window.innerHeight) * 2 + 1;
+        const dx = nx - lastMouse.x;
+        const dy = ny - lastMouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        cursorSpeed = Math.min(1.5, cursorSpeed + dist * 4.2);
+        lastMouse.set(nx, ny);
+        mouse.set(nx, ny);
+        const sphereCenterX = window.innerWidth >= 1024 ? 0.44 : 0.0;
+        const sphereCenterY = window.innerWidth >= 1024 ? 0.02 : -0.22;
+        isHoveringCenter = Math.hypot(nx - sphereCenterX, ny - sphereCenterY) < 0.48;
+        if (dist > 0.035 && isHoveringCenter) {
+          playCrystalChime(dist * 7);
+        }
+      };
+
+      window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches[0]) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      const heroEl = document.getElementById('hero');
+      const holdTrigger = document.getElementById('hold-trigger');
+      const holdFill = document.getElementById('hold-fill');
+
+      const startHold = (e) => {
+        if (e.target.closest('a, input, #sound-toggle')) return;
+        isHolding = true;
+        playCrystalChime(0.9);
+      };
+      const endHold = () => {
+        isHolding = false;
+      };
+
+      heroEl.addEventListener('mousedown', startHold);
+      heroEl.addEventListener('touchstart', startHold, { passive: true });
+      holdTrigger.addEventListener('mousedown', startHold);
+      holdTrigger.addEventListener('touchstart', startHold, { passive: true });
+      window.addEventListener('mouseup', endHold);
+      window.addEventListener('touchend', endHold);
+
+      document.getElementById('burst-btn').addEventListener('click', () => {
+        burstPulse = burstPulse > 0.3 ? 0 : 1.65;
+        playCrystalChime(1.0);
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        updateRootLayout();
+      });
+
+      const readoutEl = document.getElementById('sphere-readout');
+      const clock = new THREE.Clock();
+      const tmpNormal = new THREE.Vector3();
+      const tmpWorldShard = new THREE.Vector3();
+      const lightDirA = new THREE.Vector3(0.45, 0.65, 0.62).normalize();
+      const lightDirB = new THREE.Vector3(-0.55, 0.5, 0.66).normalize();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const dt = Math.min(clock.getDelta(), 0.05);
+        const t = clock.getElapsedTime();
+
+        cursorSpeed *= Math.pow(0.08, dt);
+        burstPulse *= Math.pow(0.32, dt);
+
+        if (isHolding) {
+          holdProgress = Math.min(1, holdProgress + dt * 0.75);
+        } else {
+          holdProgress = Math.max(0, holdProgress - dt * 1.15);
+        }
+        if (holdFill) holdFill.style.width = `${Math.round(holdProgress * 100)}%`;
+
+        smoothMouse.x += ((mouse.x > 10 ? 0 : mouse.x) - smoothMouse.x) * 0.06;
+        smoothMouse.y += ((mouse.y > 10 ? 0 : mouse.y) - smoothMouse.y) * 0.06;
+
+        const scrollProgress = Math.min(1, window.scrollY / (window.innerHeight * 0.85));
+        rootGroup.position.x = rootGroup.userData.baseX;
+        rootGroup.position.y = rootGroup.userData.baseY + scrollProgress * 0.55;
+        rootGroup.scale.setScalar(rootGroup.userData.baseScale * (1.0 - scrollProgress * 0.25));
+
+        // Intact diamond rotates smoothly inside the transparent glass sphere
+        diamondGroup.rotation.y = t * 0.34 + smoothMouse.x * 0.5;
+        diamondGroup.rotation.x = 0.24 + Math.sin(t * 0.45) * 0.05 - smoothMouse.y * 0.3;
+
+        // Outer segmented glass sphere counter-rotates and tracks cursor
+        glassSphereGroup.rotation.y = -t * 0.14 + smoothMouse.x * 0.65;
+        glassSphereGroup.rotation.x = Math.sin(t * 0.32) * 0.1 - smoothMouse.y * 0.42;
+        glassSphereGroup.updateMatrixWorld();
+
+        const centerProx = isHoveringCenter ? 0.35 : 0.0;
+        const globalTarget = Math.min(2.1, cursorSpeed * 0.9 + centerProx + holdProgress * 1.65 + burstPulse);
+
+        let avgDisp = 0;
+        for (let i = 0; i < glassShards.length; i++) {
+          const s = glassShards[i];
+
+          tmpWorldShard.copy(s.basePos).applyMatrix4(glassSphereGroup.matrixWorld);
+          const screenProj = tmpWorldShard.clone().project(camera);
+          const distToCursor = mouse.x < 10 ? Math.hypot(screenProj.x - mouse.x, screenProj.y - mouse.y) : 99;
+          const localCursorPush = Math.max(0, 1.0 - distToCursor / 0.52) * 0.95;
+
+          const wave = Math.sin(t * 2.0 + s.phase) * 0.06 * globalTarget;
+          const target = Math.max(0, (globalTarget + localCursorPush + wave) * s.weight);
+
+          const force = (target - s.currentDisp) * 26.0;
+          s.velDisp = (s.velDisp + force * dt) * Math.pow(0.06, dt);
+          s.currentDisp = Math.max(0, s.currentDisp + s.velDisp * dt);
+
+          const offset = s.currentDisp * 1.15;
+          s.mesh.position.copy(s.basePos).addScaledVector(s.outDir, offset);
+          s.mesh.setRotationFromAxisAngle(s.rotAxis, s.currentDisp * 1.35);
+          avgDisp += s.currentDisp;
+        }
+        avgDisp /= glassShards.length;
+
+        const q = diamondGroup.quaternion;
+        for (let i = 0; i < sparkleAnchors.length; i++) {
+          tmpNormal.copy(sparkleAnchors[i].normal).applyQuaternion(q);
+          const flashA = Math.pow(Math.max(0, tmpNormal.dot(lightDirA)), 28.0);
+          const flashB = Math.pow(Math.max(0, tmpNormal.dot(lightDirB)), 24.0);
+          const shimmer = 0.5 + 0.5 * Math.sin(t * 4.2 + i * 2.1);
+          gIntensity[i] = Math.min(1.0, (flashA * 1.2 + flashB * 0.9) * shimmer);
+        }
+        glintIntensityAttr.needsUpdate = true;
+
+        diamondUniforms.uTime.value = t;
+        glassShellUniforms.uTime.value = t;
+
+        const pct = Math.min(100, Math.round(avgDisp * 65));
+        if (readoutEl) readoutEl.textContent = `СФЕРА: ${pct}% РАСКРЫТИЯ`;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+
+    window.addEventListener('load', () => {
+      renderModules();
+      initDiamondWebGL();
+    });
+  </script>
+</body>
+</html>
