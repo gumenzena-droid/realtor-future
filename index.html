@@ -125,18 +125,39 @@
     .team-glass {background:linear-gradient(146deg,#fff9,#fff1 52%,#f8f5ff69);border:1px solid #fff;backdrop-filter:blur(5px);box-shadow:inset 0 1px 1px #fff,inset 0 -2px 3px #9cafd75c,0 12px 28px #273b5f16;transition:background .3s ease,box-shadow .3s ease}
     .team-glass:hover {background:linear-gradient(146deg,#fff9,#dceeff45 48%,#eee1f77d);box-shadow:inset 0 1px 2px #fff,inset 0 -2px 4px #a8a3d56b,0 13px 28px #273b5f23}
     .team-glass p+p {margin-top:.65rem}
+
+    #hero {isolation:isolate}
+    body > header {position:relative;z-index:40}
+    .hero-art {position:relative;height:clamp(245px,62vw,420px);background:url("hero-city.webp") center 58% / contain no-repeat;mix-blend-mode:multiply;mask-image:radial-gradient(ellipse 67% 59% at 50% 52%,black 60%,transparent 100%)}
+    @media(min-width:1024px){.hero-art{height:clamp(380px,43vw,600px);margin-inline:-4% -6%;background-size:contain}}
+    @media(max-width:1023px){#hero .hero-art{margin-inline:-.8rem}}
+
+    .hero-jarvis{display:grid;grid-template-columns:clamp(100px,13vw,155px) minmax(0,1fr);align-items:center;gap:.65rem;margin-top:1.2rem;max-width:29rem;min-height:124px;border:1px solid #fff;border-radius:1.35rem;background:#ffffffa3;box-shadow:0 10px 28px #273b5f19}
+    .hero-jarvis-orb{height:clamp(104px,14vw,150px);background:radial-gradient(ellipse,#d9e9ff80,transparent 68%)}
+    .hero-jarvis-orb canvas{width:100%;height:100%;display:block}
+    .hero-jarvis-content{padding:.6rem .6rem .6rem 0}.hero-jarvis h2{font-weight:700;font-size:1.15rem}.hero-jarvis p{font-size:.85rem;margin-bottom:.45rem}
+    .hero-jarvis-duration{display:inline-block;margin-left:.25rem;color:#47566b;font-size:.8rem}
+    .hero-jarvis audio{max-width:100%;height:36px;margin-top:.45rem}.hero-jarvis audio.enhanced-player:not([data-started]){display:none}
+    .hero-jarvis #status:empty{display:none}
+
+.author-portrait{position:relative;isolation:isolate;overflow:hidden;background:#fff;box-shadow:0 18px 55px #23314d18}
+.author-portrait img{display:block;width:100%;height:auto;transition:transform .85s cubic-bezier(.2,.65,.25,1)}
+.author-portrait:hover img{transform:scale(1.035)}
+.author-portrait::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 35%,#e1ecff55 48%,transparent 64%);animation:author-light 10s ease-in-out infinite}
+@keyframes author-light{0%,36%{transform:translateX(-100%)}65%,100%{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.author-portrait img{transition:none}.author-portrait:hover img{transform:none}.author-portrait::after{animation:none;display:none}}
 </style>
-<link rel="stylesheet" href="reviews.css"><script defer src="reviews.js"></script></head>
+<link rel="stylesheet" href="reviews.css"><script defer src="reviews.js"></script><script defer src="jarvis.js"></script><script defer src="jarvis-core.js"></script><link rel="stylesheet" href="benefits.css?v=responsive-2"><script defer src="events.js"></script><script defer src="benefits.js"></script></head>
 <body>
 
   <!-- Light Studio Dotted Backdrop -->
   <div class="studio-dots"></div>
 
   <!-- 3D WebGL Layer (Transparent Refracting Glass Sphere + Photorealistic Ice-White Diamond) -->
-  <canvas id="diamond-canvas"></canvas>
+
 
   <!-- Minimalist Top Navigation matching [WORK] [AGENCY] [CONTACT] style -->
-  <header class="fixed top-0 left-0 right-0 z-40 px-5 sm:px-10 py-5">
+  <header class="site-header fixed top-0 left-0 right-0 z-40 px-5 sm:px-10 py-5">
     <div class="max-w-[1440px] mx-auto flex items-center justify-between">
       <a href="https://t.me/evolution_estate_club" class="flex items-baseline gap-1.5 group" aria-label="Эволюция риэлтора в Telegram">
         <span class="font-display-condensed text-2xl sm:text-3xl tracking-tight text-[#0a0b0e]">Эволюция</span>
@@ -145,15 +166,15 @@
 
       <nav class="hidden md:flex items-center gap-7 font-mono-code text-xs tracking-wider uppercase text-[#0a0b0e]">
         <a href="#philosophy" class="hover:opacity-55 transition-opacity">Возможности</a>
-        <a href="#program" class="hover:opacity-55 transition-opacity">Программа</a>
+        <a href="jarvis.html" class="hover:opacity-55 transition-opacity">Программа</a>
         <a href="#expert" class="hover:opacity-55 transition-opacity">Об авторе</a>
         <a href="#reviews" class="hover:opacity-55 transition-opacity">Отзывы</a>
         <a href="#formats" class="hover:opacity-55 transition-opacity">Условия</a>
       </nav>
 
       <div class="flex items-center gap-3">
-        <button type="button" onclick="openModal('Консультация по курсу')" class="btn-dark font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full">
-          [ЗАПИСАТЬСЯ]
+        <button type="button" data-contact-max onclick="openModal('Консультация по курсу')" class="btn-dark font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full" data-consultation="header">
+          Получить план офиса
         </button>
       </div>
     </div>
@@ -162,38 +183,51 @@
   <main>
     <!-- HERO SECTION: White Studio + Giant Condensed Typography + Transparent Glass Sphere + Diamond -->
     <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-20 pb-6 px-5 sm:px-10 select-none overflow-hidden">
+      <canvas id="diamond-canvas" aria-hidden="true"></canvas>
       <!-- Top Subtitle -->
       <div class="max-w-[1440px] w-full mx-auto flex justify-between items-center pt-2 font-mono-code text-[11px] uppercase tracking-widest text-[#0a0b0e]/60">
-        <span>Авторская программа индивидуального сопровождения</span>
+        <span>Риелтор нового времени · Авторская программа</span>
         <span class="hidden sm:inline" id="sphere-readout">СФЕРА: 0% РАСКРЫТИЯ</span>
       </div>
 
       <!-- Asymmetric Editorial Split Layout: Left Typography + Right 3D Crystal Sphere -->
-      <div class="max-w-[1440px] w-full mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 items-center gap-8 py-6">
+      <div class="max-w-[1440px] w-full mx-auto my-auto hero-layout grid grid-cols-1 lg:grid-cols-12 items-center gap-8 py-6">
         <div class="lg:col-span-6 text-left pointer-events-none z-20">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#0a0b0e]/15 bg-white/75 backdrop-blur-sm font-mono-code text-[10px] uppercase tracking-widest text-[#0a0b0e]/75 mb-5">
             <span class="w-1.5 h-1.5 rounded-full bg-[#0a0b0e]"></span>
             <span>1 МЕСЯЦ · БЕРУ ЗА РУКУ И ИДЁМ ВМЕСТЕ</span>
           </div>
-          <h1 class="font-display-condensed text-[#0a0b0e] leading-[0.88] tracking-[-0.02em]"
+          <h1 id="main-title" class="font-display-condensed text-[#0a0b0e] leading-[0.88] tracking-[-0.02em]"
               style="font-size: clamp(3.6rem, 8.2vw, 8.2rem);">
             РИЕЛТОР<br />НОВОГО<br />ВРЕМЕНИ
           </h1>
           <p class="text-sm sm:text-base text-[#0a0b0e]/70 mt-5 max-w-md leading-relaxed">
-            За месяц спроектируем Ваш AI-офис, настроим первых цифровых сотрудников и проверим их работу на Ваших задачах.
+            Создайте собственный AI-офис с цифровыми сотрудниками для личного бренда, контента, привлечения клиентов, аналитики недвижимости и продаж.
           </p>
-          <div class="pointer-events-auto flex flex-wrap gap-2 mt-5">
-            <a href="jarvis.html" class="btn-dark rounded-full px-4 py-2 text-sm font-semibold">Узнать подробнее о программе</a>
-            <a href="https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I" class="rounded-full border border-black/25 bg-white/85 px-4 py-2 text-sm font-semibold">Обсудить мой AI-офис</a>
+          <p class="offer-note">Цифровой офис — набор настроенных AI-помощников. За месяц выберем задачи, настроим первых помощников и проверим их на Ваших материалах.</p>
+          <div class="offer-actions pointer-events-auto">
+            <a href="#philosophy" class="offer-button">Посмотреть цифровой офис</a>
+            <a href="jarvis.html" class="offer-button secondary">Узнать подробнее о программе</a>
           </div>
+          <section id="jarvis" class="hero-jarvis pointer-events-auto" aria-labelledby="hero-jarvis-title">
+            <div class="hero-jarvis-orb" aria-hidden="true"><canvas id="core"></canvas></div>
+            <div class="hero-jarvis-content">
+              <h2 id="hero-jarvis-title">Джарвис</h2>
+              <p>Елена Гумен рассказывает о программе</p>
+              <button class="btn-dark rounded-full px-4 py-2 text-sm font-semibold" id="listen" type="button" hidden>Прослушать программу</button>
+              <span class="hero-jarvis-duration">12:35</span>
+              <p id="status" role="status"></p>
+              <audio id="voice" controls preload="none" src="jarvis-intro.m4a" aria-label="Запись о программе"></audio>
+            </div>
+          </section>
         </div>
 
         <!-- Right column spacer reserved for the 3D glass sphere & diamond -->
-        <div class="lg:col-span-6 h-[320px] sm:h-[420px] lg:h-[520px] pointer-events-none"></div>
+        <div id="hero-art" class="hero-art lg:col-span-6 pointer-events-none" aria-hidden="true"></div>
       </div>
 
       <!-- Bottom Interactive Bar matching Noomo Labs ("ARE YOU READY..." + "CLICK AND HOLD" + progress pill) -->
-      <div class="max-w-[1440px] w-full mx-auto relative z-20">
+      <div class="max-w-[1440px] w-full mx-auto relative z-20 hero-sphere-controls">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2.5">
           <div>
             <p class="font-display-condensed text-xl sm:text-2xl tracking-wide text-[#0a0b0e] uppercase leading-none">
@@ -205,7 +239,7 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3 self-start sm:self-end">
-            <a href="#program" class="font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-[#0a0b0e]/25 bg-white/80 hover:bg-[#0a0b0e] hover:text-white transition-colors">
+            <a href="jarvis.html" class="font-mono-code text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-[#0a0b0e]/25 bg-white/80 hover:bg-[#0a0b0e] hover:text-white transition-colors">
               ПРОГРАММА
             </a>
             <button type="button" id="hold-trigger" class="font-display-condensed text-lg sm:text-xl tracking-wider uppercase text-[#0a0b0e] hover:opacity-70 transition-opacity cursor-pointer">
@@ -234,59 +268,19 @@
       </div>
     </section>
 
-    <!-- PHILOSOPHY SECTION -->
-    <section id="analyst-example" class="relative z-10 py-20 px-5 sm:px-10 bg-white border-t border-black/10">
-      <div class="max-w-7xl mx-auto">
-        <p class="font-mono-code text-sm mb-3">Демонстрационный пример</p>
-        <h2 class="font-display-condensed text-4xl sm:text-6xl mb-5">Как AI-аналитик готовит подборку</h2>
-        <p class="max-w-3xl mb-7">Покупатель ищет квартиру до 9 млн ₽, со сдачей в 2027 году и отделкой. Риелтор даёт аналитику запрос и данные по трём ЖК. Аналитик собирает сравнение и отмечает, где нужно уточнить условия.</p>
-        <div class="glass-panel rounded-3xl p-4 sm:p-7">
-          <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Сравнение жилых комплексов">
-            <table class="w-full min-w-[500px] text-left text-sm">
-              <caption class="text-left mb-3 font-semibold">Сравнение трёх условных ЖК</caption>
-              <thead><tr class="border-b border-black/20"><th class="py-2 pr-3">Объект</th><th class="py-2 pr-3">Цена</th><th class="py-2 pr-3">Сдача</th><th class="py-2">Отделка</th></tr></thead>
-              <tbody>
-                <tr class="border-b border-black/10"><th scope="row" class="py-3">ЖК А</th><td>8,6 млн ₽</td><td>2027</td><td>Готовая</td></tr>
-                <tr class="border-b border-black/10"><th scope="row" class="py-3">ЖК Б</th><td>8,2 млн ₽</td><td>2027</td><td>Предчистовая</td></tr>
-                <tr><th scope="row" class="py-3">ЖК В</th><td>8,9 млн ₽</td><td>2028</td><td>Готовая</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="mt-4"><strong>Результат.</strong> ЖК А подходит по всем трём критериям. Перед отправкой риелтор подтверждает наличие квартиры, актуальную цену, срок сдачи и состав отделки.</p>
-        </div>
-      </div>
-    </section>
-    <section id="philosophy" class="relative z-10 py-24 px-5 sm:px-10 bg-white/90 border-t border-black/10">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="font-display-condensed text-4xl sm:text-6xl mb-5">Ваш будущий цифровой офис</h2>
-        <p class="max-w-3xl mb-10 text-black/70">У каждого AI-сотрудника своя роль, рабочие инструкции и критерии результата. Вы ставите задачу, получаете результат, проверяете его и принимаете решение. Помощники доступны 24/7 при доступности выбранных сервисов.</p>
-        <div class="team-grid grid gap-5 md:grid-cols-2 lg:grid-cols-3"><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Маркетолог</h3><p>Помогает анализировать целевую аудиторию, разрабатывать маркетинговую стратегию, находить точки роста, создавать рекламные офферы и планировать продвижение.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Контент-Менеджер</h3><p>Помогает создавать контент-планы, посты, сценарии Reels, экспертные публикации, тексты для видеороликов и материалы для социальных сетей.</p><p>В связке с инструментами генерации изображений и видео может стать основой полноценного цифрового контент-производства.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Аналитик Недвижимости</h3><p>Сравнивает жилые комплексы, структурирует информацию об объектах, анализирует предложения, помогает рассчитывать доходность и формировать аналитические отчёты.</p><p>Работает с доступными и проверяемыми данными.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Наставник</h3><p>Помогает ставить цели, структурировать задачи, формировать планы, анализировать прогресс и находить решения для развития бизнеса.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Помощник По Юридическим Вопросам</h3><p>Помогает разбирать правовые вопросы, структурировать документы, формировать чек-листы, изучать нормативные требования и готовить вопросы для профильного юриста.</p><p>Не заменяет профессиональную юридическую проверку сделки.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Ассистент По Продажам</h3><p>Подготавливает коммерческие предложения, скрипты переговоров, ответы на возражения, персонализированные подборки и сценарии клиентских коммуникаций.</p></article><article class="team-glass rounded-3xl p-7"><h3 class="text-xl font-bold mb-3">AI-Бизнес-Ассистент</h3><p>Помогает планировать задачи, систематизировать информацию, готовить отчёты, контролировать рабочие процессы и координировать доступные инструменты.</p></article><article class="team-glass rounded-3xl p-7">
-<h3 class="text-xl font-bold mb-3">Ваш тренажёр переговоров</h3>
-<p>В программе настроим тренажёр в ChatGPT. Он сыграет клиента по Вашему сценарию: покупателя, который сомневается в цене, или собственника, который возражает против комиссии.</p>
-<p>После диалога ChatGPT разберёт Ваши ответы, выделит сильные и слабые стороны и предложит формулировки, которые можно попробовать в следующем раунде.</p>
-</article></div>
-      </div>
-    </section>
-    <section id="program" class="py-24 px-5 sm:px-10 bg-[#f6f7fa]/90 backdrop-blur-md border-t border-black/10">
-      <div class="max-w-7xl mx-auto">
-        <div class="mb-14">
-          <p class="font-mono-code text-xs tracking-[0.2em] uppercase mb-3 text-black/55">ИНДИВИДУАЛЬНЫЙ МАРШРУТ</p>
-          <h2 class="font-display-condensed text-4xl sm:text-6xl leading-[0.95] text-[#0a0b0e]">
-            КАК МЫ СОЗДАДИМ ВАШ AI-ОФИС
-          </h2>
-        </div>
 
-        <p class="max-w-2xl mb-7 text-black/70">Начнём с аудита и подберём роли под Вашу специализацию. Число сотрудников за месяц зависит от Ваших задач и сложности настройки. Познакомимся с вайб-кодингом и попробуем собрать небольшой рабочий инструмент, описывая задачу ИИ обычным языком.</p><div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div class="lg:col-span-5 flex flex-col gap-3" id="module-list"></div>
-          <div class="lg:col-span-7 glass-panel rounded-3xl p-8 sm:p-10 min-h-[340px] flex flex-col justify-between" id="module-detail"></div>
-        </div>
-      </div>
-    </section>
+
+<section id="philosophy" class="benefits-section city-section" aria-labelledby="city-title">
+  <div class="city-heading"><h2 id="city-title">Войдите в цифровой офис</h2><p>Выберите этаж, чтобы посмотреть, какие задачи и материалы можно поручить отделу.</p></div>
+  <iframe class="city-frame" title="Интерактивный цифровой офис КОНТУР" src="cinematic/?v=responsive-2" loading="lazy"></iframe>
+</section>
+
+
 
     <!-- ABOUT EXPERT SECTION -->
     <section id="expert" class="relative z-10 py-24 px-5 sm:px-10 bg-white/90 border-t border-black/10">
       <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        <img src="elena-gumen.webp" alt="Елена Гумен" width="940" height="1080" loading="lazy" class="lg:col-span-5 w-full max-w-lg rounded-3xl object-cover">
+        <figure class="author-portrait lg:col-span-5 w-full max-w-lg rounded-3xl"><img src="elena-chair.webp" alt="Елена Гумен в чёрном кресле" width="1100" height="1100" loading="lazy"></figure>
         <div class="lg:col-span-7">
           <p class="font-mono-code text-sm uppercase mb-3">Автор программы</p>
           <h2 class="font-display-condensed text-5xl sm:text-7xl mb-5">Елена Гумен</h2>
@@ -324,7 +318,7 @@
         <div>
           <p class="font-display-condensed text-5xl mb-2">50 000 ₽</p>
           <p class="mb-5 text-black/70">Предоплата 100%. Подписки, API и сторонние сервисы оплачиваются отдельно, если они нужны и согласованы с Вами.</p>
-          <div class="contact-links"><a href="https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I">Написать в MAX</a><a href="https://t.me/Elena_Gumen">Telegram</a><a href="tel:+79089641945">Позвонить</a></div>
+          <div class="contact-links"><a data-consultation="pricing" href="https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I">Получить план своего цифрового офиса в MAX</a><a href="https://t.me/Elena_Gumen">Telegram</a><a href="tel:+79089641945">Позвонить</a></div>
         </div>
       <p style="margin-top:1rem;font-size:.92rem">Дата старта и условия договора согласуются индивидуально. На сайте оплата не принимается. Информация о программе носит ознакомительный характер и не является публичной офертой.</p></div>
     </section>
@@ -337,7 +331,7 @@
       <span>© 2026 «РИЕЛТОР НОВОГО ВРЕМЕНИ». АВТОРСКАЯ ПРОГРАММА.</span>
       <div class="flex items-center gap-6">
         <a href="#hero" class="hover:text-black transition-colors">Наверх</a>
-        <button type="button" onclick="openModal('Заявка из подвала сайта')" class="hover:text-black transition-colors">Связаться</button>
+        <button type="button" data-consultation="footer" data-contact-max onclick="openModal('Заявка из подвала сайта')" class="hover:text-black transition-colors">Связаться</button>
       </div>
     </div>
   <div style="max-width:90rem;margin:1rem auto 0;padding-top:1rem;border-top:1px solid #77819544;font-size:.92rem;line-height:1.6">
@@ -351,69 +345,6 @@
     // =========================================================================
     // 1. COURSE PROGRAM MODULES & UI
     // =========================================================================
-    const MODULES = [
-      { num:'01', title:'Аудит и выбор задачи', duration:'Неделя 1', summary:'Зафиксируем Вашу точку А и результат, к которому хотите прийти. Вместе найдём процесс, где внедрение ИИ даст заметный эффект.', outcomes:['Карта текущих процессов','Задача для первого внедрения','Критерии результата'] },
-      { num:'02', title:'Настройка AI-сотрудников', duration:'Неделя 2', summary:'Создадим приоритетных AI-сотрудников: зададим им роли, инструкции, рабочий контекст и критерии качества.', outcomes:['Первые AI-сотрудники под Ваши задачи','Адаптированные промпты','Инструкция по проверке результата'] },
-      { num:'03', title:'Внедрение в работу', duration:'Неделя 3', summary:'Применим инструмент в Вашей обычной работе. На встрече разберём, что получилось и где нужна корректировка.', outcomes:['Проверка на реальных рабочих задачах','Личная обратная связь','Докрутка инструмента'] },
-      { num:'04', title:'Закрепление и план развития', duration:'Неделя 4', summary:'Соберём то, что работает, в понятный порядок действий. Наметим следующие процессы, в которых Вам имеет смысл внедрить ИИ.', outcomes:['Персональная система работы с ИИ','Промпты и инструкции под рукой','План развития цифровой команды'] },
-    ];
-
-    let activeModuleIdx = 0;
-
-    function renderModules() {
-      const listEl = document.getElementById('module-list');
-      const detailEl = document.getElementById('module-detail');
-      if (!listEl || !detailEl) return;
-
-      listEl.innerHTML = MODULES.map((m, idx) => {
-        const isActive = idx === activeModuleIdx;
-        return `
-          <button type="button" onclick="selectModule(${idx})"
-            class="text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-4 ${isActive ? 'bg-white border-[#0a0b0e] shadow-lg' : 'border-black/10 bg-white/50 hover:bg-white'}">
-            <div class="flex items-center gap-4">
-              <span class="font-mono-code text-xs px-2.5 py-1 rounded-full ${isActive ? 'bg-[#0a0b0e] text-white' : 'bg-black/5 text-black/60'}">${m.num}</span>
-              <span class="font-semibold text-sm sm:text-base text-[#0a0b0e]">${m.title}</span>
-            </div>
-            <span class="font-mono-code text-[11px] shrink-0 text-black/55">${m.duration}</span>
-          </button>
-        `;
-      }).join('');
-
-      const active = MODULES[activeModuleIdx];
-      detailEl.innerHTML = `
-        <div>
-          <div class="flex items-center justify-between mb-6">
-            <span class="font-mono-code text-xs uppercase tracking-widest px-3 py-1 rounded-full bg-[#0a0b0e] text-white">
-              МОДУЛЬ ${active.num} • ${active.duration}
-            </span>
-          </div>
-          <h3 class="font-display-condensed text-3xl sm:text-5xl mb-4 text-[#0a0b0e]">${active.title}</h3>
-          <p class="text-sm sm:text-base leading-relaxed mb-8 text-black/70">${active.summary}</p>
-          <div class="space-y-3">
-            <div class="font-mono-code text-[11px] uppercase tracking-widest mb-2 text-black/55">Ключевые результаты модуля:</div>
-            ${active.outcomes.map(o => `
-              <div class="flex items-start gap-3 text-sm text-[#0a0b0e]">
-                <span class="w-1.5 h-1.5 rotate-45 mt-2 shrink-0 bg-[#0a0b0e]"></span>
-                <span>${o}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-        <div class="mt-8 pt-6 border-t border-black/10 flex items-center justify-between">
-          <span class="text-xs text-black/60">Маршрут адаптируем под Ваши цели</span>
-          <button type="button" onclick="openModal('Программа: Модуль ${active.num}')" class="text-xs font-mono-code uppercase tracking-wider inline-flex items-center gap-1.5 font-bold hover:opacity-70">
-            <span>ОБСУДИТЬ УЧАСТИЕ</span>
-            <span>↗</span>
-          </button>
-        </div>
-      `;
-    }
-
-    window.selectModule = function(idx) {
-      activeModuleIdx = idx;
-      renderModules();
-    };
-
     window.openModal = function() {
       location.href = 'https://max.ru/u/f9LHodD0cOIrdDq9lHuw89YvLucKKpRPgYVImkzUoALuNixoEcBbSnYnT1I';
     };
@@ -765,6 +696,7 @@
     }
 
     function initDiamondWebGL() {
+      if (matchMedia('(max-width: 767px), (max-device-width: 767px) and (pointer: coarse)').matches) return;
       if (typeof THREE === 'undefined') return;
       const canvas = document.getElementById('diamond-canvas');
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -789,20 +721,18 @@
       rootGroup.add(glassSphereGroup);
 
       // Position 3D composition into the right column on desktop, centered below text on mobile
+      const heroArt = document.getElementById('hero-art');
+      const artRay = new THREE.Vector3();
       function updateRootLayout() {
-        const isDesktop = window.innerWidth >= 1024;
-        const aspect = window.innerWidth / window.innerHeight;
-        if (isDesktop) {
-          rootGroup.userData.baseX = Math.min(1.65, aspect * 0.92);
-          rootGroup.userData.baseY = 0.06;
-          rootGroup.userData.baseScale = 0.78;
-        } else {
-          rootGroup.userData.baseX = 0;
-          rootGroup.userData.baseY = -0.62;
-          rootGroup.userData.baseScale = 0.64;
-        }
+        const bounds = heroArt.getBoundingClientRect();
+        const x = (bounds.left + bounds.width / 2) / window.innerWidth * 2 - 1;
+        const y = 1 - (bounds.top + bounds.height * .51) / window.innerHeight * 2;
+        artRay.set(x, y, .5).unproject(camera).sub(camera.position);
+        const distance = -camera.position.z / artRay.z;
+        rootGroup.position.copy(camera.position).addScaledVector(artRay, distance);
+        rootGroup.scale.setScalar(Math.min(.84, Math.min(bounds.width, bounds.height) / window.innerHeight * 1.36));
+        rootGroup.visible = bounds.bottom > 0 && bounds.top < window.innerHeight;
       }
-      updateRootLayout();
 
       const studioBackdropTex = createStudioBackdropTexture();
       const { facets, sparkleAnchors } = buildTolkowskyBrilliantCut();
@@ -953,9 +883,15 @@
       diamondGroup.add(shadowPlane);
 
       // Ultra-Transparent Refracting Glass Sphere Material (Noomo Labs crystal clear glass tiles!)
+      const glassCityMap = new THREE.TextureLoader().load('hero-city.webp', () => {
+        glassShellUniforms.uCityReady.value = 1;
+      });
       const glassShellUniforms = {
         uTime: { value: 0 },
-        uBackdrop: { value: studioBackdropTex }
+        uBackdrop: { value: studioBackdropTex },
+        uCity: { value: glassCityMap },
+        uCityReady: { value: 0 },
+        uCityBounds: { value: new THREE.Vector4() }
       };
 
       const glassShellMat = new THREE.ShaderMaterial({
@@ -964,6 +900,16 @@
         fragmentShader: `
           uniform float uTime;
           uniform sampler2D uBackdrop;
+          uniform sampler2D uCity;
+          uniform vec4 uCityBounds;
+          uniform float uCityReady;
+          vec3 sampleBackground(vec2 uv) {
+            vec2 city = (uv-uCityBounds.xy)/max(uCityBounds.zw,vec2(.001));
+            vec2 bounds = smoothstep(vec2(0.),vec2(.08),city) * (1.-smoothstep(vec2(.92),vec2(1.),city));
+            vec3 studio = texture2D(uBackdrop,uv).rgb;
+            float neutral = dot(studio,vec3(.2126,.7152,.0722));
+            return mix(vec3(neutral),texture2D(uCity,clamp(city,0.,1.)).rgb,bounds.x*bounds.y*uCityReady);
+          }
 
           varying vec3 vWorldNormal;
           varying vec3 vWorldPos;
@@ -986,9 +932,9 @@
             vec2 uvB = clamp(screenUV - viewNormal.xy * (iorShift * 0.92), 0.01, 0.99);
 
             vec3 refractedScene = vec3(
-              texture2D(uBackdrop, uvR).r,
-              texture2D(uBackdrop, uvG).g,
-              texture2D(uBackdrop, uvB).b
+              sampleBackground(uvR).r,
+              sampleBackground(uvG).g,
+              sampleBackground(uvB).b
             );
 
             // Clean Fresnel edge definition without any dark/black reflections
@@ -1005,14 +951,15 @@
             float spec2 = pow(max(dot(N, normalize(L2 + V)), 0.0), 95.0) * 0.75;
 
             // Pure, crystal-clear light glass tiles
-            vec3 col = mix(refractedScene, vec3(1.0), 0.45);
-            col = mix(col, prism, (vIsEdge * 0.28 + fresnel * 0.16));
+            vec3 col = mix(refractedScene, vec3(0.99, 0.985, 0.98), 0.06);
+            col = mix(col, vec3(0.21,0.23,0.26), fresnel * 0.29);
+            col = mix(col, prism, (vIsEdge * 0.10 + fresnel * 0.045));
             col += vec3(spec1 + spec2);
 
             float alpha = clamp(
-              0.02 + fresnel * 0.22 + vIsEdge * 0.30 + (spec1 + spec2) * 0.62,
-              0.02,
-              0.68
+              0.08 + fresnel * 0.40 + vIsEdge * 0.54 + (spec1 + spec2) * 0.70,
+              0.08,
+              0.87
             );
 
             gl_FragColor = vec4(col, alpha);
@@ -1110,9 +1057,9 @@
         cursorSpeed = Math.min(1.5, cursorSpeed + dist * 4.2);
         lastMouse.set(nx, ny);
         mouse.set(nx, ny);
-        const sphereCenterX = window.innerWidth >= 1024 ? 0.44 : 0.0;
-        const sphereCenterY = window.innerWidth >= 1024 ? 0.02 : -0.22;
-        isHoveringCenter = Math.hypot(nx - sphereCenterX, ny - sphereCenterY) < 0.48;
+        const bounds = heroArt.getBoundingClientRect();
+        const radius = Math.min(bounds.width, bounds.height) * .37;
+        isHoveringCenter = Math.hypot(clientX - bounds.left - bounds.width / 2, clientY - bounds.top - bounds.height * .51) < radius;
         if (dist > 0.035 && isHoveringCenter) {
           playCrystalChime(dist * 7);
         }
@@ -1180,10 +1127,17 @@
         smoothMouse.x += ((mouse.x > 10 ? 0 : mouse.x) - smoothMouse.x) * 0.06;
         smoothMouse.y += ((mouse.y > 10 ? 0 : mouse.y) - smoothMouse.y) * 0.06;
 
-        const scrollProgress = Math.min(1, window.scrollY / (window.innerHeight * 0.85));
-        rootGroup.position.x = rootGroup.userData.baseX;
-        rootGroup.position.y = rootGroup.userData.baseY + scrollProgress * 0.55;
-        rootGroup.scale.setScalar(rootGroup.userData.baseScale * (1.0 - scrollProgress * 0.25));
+        updateRootLayout();
+        if (glassShellUniforms.uCityReady.value) {
+          const bounds = heroArt.getBoundingClientRect();
+          const ratio = glassCityMap.image.width / glassCityMap.image.height;
+          const width = Math.min(bounds.width, bounds.height * ratio);
+          const height = width / ratio;
+          glassShellUniforms.uCityBounds.value.set(
+            (bounds.left + (bounds.width-width)*.5)/innerWidth,
+            1-(bounds.top+(bounds.height-height)*.58+height)/innerHeight,
+            width/innerWidth,height/innerHeight);
+        }
 
         // Intact diamond rotates smoothly inside the transparent glass sphere
         diamondGroup.rotation.y = t * 0.34 + smoothMouse.x * 0.5;
@@ -1243,7 +1197,6 @@
     }
 
     window.addEventListener('load', () => {
-      renderModules();
       initDiamondWebGL();
     });
   </script>

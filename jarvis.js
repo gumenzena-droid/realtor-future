@@ -40,6 +40,8 @@ player.addEventListener('error', () => {
   status.textContent = 'Не удалось загрузить запись. Попробуйте обновить страницу.';
 });
 listen.hidden = false;
+player.classList.add('enhanced-player');
+player.addEventListener('playing', () => { player.dataset.started = ''; });
 listen.addEventListener('click', async () => {
   if (!player.paused) {
     player.pause();
@@ -56,6 +58,6 @@ listen.addEventListener('click', async () => {
 player.addEventListener('playing', () => { listen.textContent = 'Поставить на паузу'; });
 for (const event of ['pause', 'ended', 'error']) {
   player.addEventListener(event, () => {
-    listen.textContent = 'Прослушать подробное содержание программы';
+    listen.textContent = 'Прослушать программу';
   });
 }
